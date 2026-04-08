@@ -1,0 +1,110 @@
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type UserProfile = 
+ record {
+   createdAt: int;
+   details: text;
+   name: text;
+   phone: text;
+ };
+type Subject = 
+ record {
+   chapterCount: nat;
+   createdAt: int;
+   id: nat;
+   name: text;
+   phone: text;
+ };
+type StudySession = 
+ record {
+   date: text;
+   durationSeconds: nat;
+   endTime: int;
+   id: nat;
+   phone: text;
+   startTime: int;
+   subject: text;
+ };
+type RegisterResult = 
+ variant {
+   invalidPhone;
+   invalidPin;
+   ok: UserProfile;
+   phoneAlreadyTaken;
+ };
+type LoginResult = 
+ variant {
+   ok: UserProfile;
+   userNotFound;
+   wrongPin;
+ };
+type DeleteResult = 
+ variant {
+   ok;
+   userNotFound;
+ };
+type Chapter = 
+ record {
+   createdAt: int;
+   id: nat;
+   name: text;
+   phone: text;
+   status: text;
+   subjectId: nat;
+   subjectName: text;
+ };
+type AdminUserDetail = 
+ record {
+   createdAt: int;
+   details: text;
+   name: text;
+   phone: text;
+   pin: text;
+ };
+service : {
+  _initializeAccessControl: () -> ();
+  addChapter: (phone: text, subjectId: nat, name: text) ->
+   (variant {
+      err: text;
+      ok: Chapter;
+    });
+  addSubject: (phone: text, name: text) -> (variant {
+                                              err: text;
+                                              ok: Subject;
+                                            });
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  deleteChapter: (phone: text, chapterId: nat) -> (variant {
+                                                     err: text;
+                                                     ok;
+                                                   });
+  deleteStudySession: (phone: text, sessionId: nat) -> (bool);
+  deleteSubject: (phone: text, subjectId: nat) -> (variant {
+                                                     err: text;
+                                                     ok;
+                                                   });
+  deleteUser: (phone: text) -> (DeleteResult);
+  getAllUserDetails: () -> (vec AdminUserDetail) query;
+  getAllUserProfiles: () -> (vec UserProfile) query;
+  getCallerUserRole: () -> (UserRole) query;
+  getChapters: (phone: text, subjectId: nat) -> (vec Chapter);
+  getPendingChapters: (phone: text) -> (vec Chapter);
+  getPendingChaptersCount: (phone: text) -> (nat);
+  getStudySessions: (phone: text) -> (vec StudySession) query;
+  getSubjects: (phone: text) -> (vec Subject);
+  getUserProfile: (phone: text) -> (opt UserProfile) query;
+  isCallerAdmin: () -> (bool) query;
+  loginUser: (phone: text, pin: text) -> (LoginResult) query;
+  registerUser: (phone: text, name: text, details: text, pin: text) ->
+   (RegisterResult);
+  saveStudySession: (phone: text, subject: text, durationSeconds: nat, date:
+   text, startTime: int, endTime: int) -> (nat);
+  updateChapterStatus: (phone: text, chapterId: nat, status: text) ->
+   (variant {
+      err: text;
+      ok;
+    });
+}

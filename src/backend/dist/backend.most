@@ -1,0 +1,93 @@
+// Version: 1.0.0
+type Chapter__993775566 =
+  {
+    createdAt : Int;
+    id : Nat;
+    name : Text;
+    phone : Text;
+    status : Text;
+    subjectId : Nat;
+    subjectName : Text
+  };
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type LegacyProfile__684437721 = {name : Text};
+type LegacyRole__169053413 = {#admin; #guest; #user};
+type LegacyUser__831178372 =
+  {
+    principal : Principal;
+    profile : LegacyProfile__684437721;
+    role : LegacyRole__169053413
+  };
+type List__415060402<T> = List__790383201<T>;
+type List__790383201<T> =
+  {
+    var blockIndex : Nat__490723111;
+    var blocks : [var [var ?T]];
+    var elementIndex : Nat__490723111
+  };
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type StudySession__500027106 =
+  {
+    date : Text;
+    durationSeconds : Nat;
+    endTime : Int;
+    id : Nat;
+    phone : Text;
+    startTime : Int;
+    subject : Text
+  };
+type Subject__933572475 =
+  {chapterCount : Nat; createdAt : Int; id : Nat; name : Text; phone : Text};
+type UserEntry__185855732 = {pin : Text; profile : UserProfile__491224006};
+type UserProfile__491224006 =
+  {createdAt : Int; details : Text; name : Text; phone : Text};
+type UserRole__1054455867 = {#admin; #guest; #user};
+actor {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__605269027<Principal, UserRole__1054455867>
+    };
+  stable chapterStore :
+    {
+      var root : Node__46230540<Text, List__415060402<Chapter__993775566>>;
+      var size : Nat__490723111
+    };
+  stable nextChapterId : [var Nat];
+  stable var nextSessionId : Nat;
+  stable nextSubjectId : [var Nat];
+  stable phoneToPrincipal :
+    {var root : Node__46230540<Text, Principal>; var size : Nat__490723111};
+  stable studySessionStore :
+    {
+      var root :
+        Node__46230540<Text, List__415060402<StudySession__500027106>>;
+      var size : Nat__490723111
+    };
+  stable subjectStore :
+    {
+      var root : Node__46230540<Text, List__415060402<Subject__933572475>>;
+      var size : Nat__490723111
+    };
+  stable userStore :
+    {
+      var root : Node__46230540<Text, UserEntry__185855732>;
+      var size : Nat__490723111
+    };
+  stable var users :
+    {
+      var root : Node__46230540<Principal, LegacyUser__831178372>;
+      var size : Nat__490723111
+    }
+};
