@@ -7,13 +7,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { BookOpen, LogOut, User } from "lucide-react";
 import { useAppAuth } from "../hooks/useAppAuth";
+import { useAppLogo } from "../hooks/useAppLogo";
 
 interface DashboardHeaderProps {
   userRole: "user" | "admin";
 }
 
+/**
+ * Mobile-only header (hidden on desktop — Layout sidebar handles desktop navigation).
+ * Logo is fetched from the backend canister so it syncs across all devices.
+ */
 export default function DashboardHeader({ userRole }: DashboardHeaderProps) {
   const { session, logout } = useAppAuth();
+  const logoSrc = useAppLogo();
 
   const displayName =
     session?.name || (userRole === "admin" ? "Admin" : "User");
@@ -25,11 +31,19 @@ export default function DashboardHeader({ userRole }: DashboardHeaderProps) {
     .slice(0, 2);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 h-14 bg-card/95 backdrop-blur-sm border-b border-border flex items-center px-4">
+    <header className="lg:hidden fixed top-0 left-0 right-0 z-50 h-14 bg-card/95 backdrop-blur-sm border-b border-border flex items-center px-4">
       {/* Logo + App name */}
       <div className="flex items-center gap-2.5 flex-1">
-        <div className="w-8 h-8 rounded-lg gradient-hero flex items-center justify-center flex-shrink-0">
-          <BookOpen className="w-4 h-4 text-white" />
+        <div className="w-8 h-8 rounded-lg gradient-hero flex items-center justify-center flex-shrink-0 overflow-hidden">
+          {logoSrc ? (
+            <img
+              src={logoSrc}
+              alt="App logo"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <BookOpen className="w-4 h-4 text-white" />
+          )}
         </div>
         <div className="flex flex-col">
           <span className="text-xs font-bold text-foreground leading-tight font-display">

@@ -43,6 +43,18 @@ export interface Chapter {
   subjectName: string; // populated on pending list
 }
 
+// ─── Gym Types ────────────────────────────────────────────────────────────────
+
+export type AttendanceStatus = "present" | "absent" | "rest";
+
+export interface GymRecord {
+  id: string;
+  phone: string;
+  date: string; // YYYY-MM-DD
+  status: AttendanceStatus;
+  note: string;
+}
+
 // ─── Result Variants ─────────────────────────────────────────────────────────
 
 export type LoginResult =
@@ -62,6 +74,44 @@ export const DeleteResult = {
   ok: "ok" as DeleteResultKind,
   notFound: "notFound" as DeleteResultKind,
 };
+
+export type AttendanceResult =
+  | { __kind__: "ok"; ok: GymRecord }
+  | { __kind__: "unauthorized"; unauthorized: null };
+
+// ─── Notes & PDF Types ────────────────────────────────────────────────────────
+
+export interface Note {
+  id: string;
+  phone: string;
+  subject: string;
+  title: string;
+  content: string;
+  colorTag: string;
+  isPinned: boolean;
+  createdAt: bigint;
+  updatedAt: bigint;
+}
+
+export interface Pdf {
+  id: string;
+  phone: string;
+  subject: string;
+  filename: string;
+  fileData: Uint8Array;
+  contentType: string;
+  createdAt: bigint;
+}
+
+export type NoteResult =
+  | { __kind__: "ok"; ok: Note }
+  | { __kind__: "notFound"; notFound: null }
+  | { __kind__: "unauthorized"; unauthorized: null };
+
+export type PdfResult =
+  | { __kind__: "ok"; ok: Pdf }
+  | { __kind__: "notFound"; notFound: null }
+  | { __kind__: "unauthorized"; unauthorized: null };
 
 // ─── Extended Backend Interface ───────────────────────────────────────────────
 
@@ -123,4 +173,48 @@ export interface AppBackend {
   // Syllabus — Pending
   getPendingChapters(phone: string): Promise<Chapter[]>;
   getPendingChaptersCount(phone: string): Promise<bigint>;
+
+  // Gym
+  getGymAttendance(phone: string): Promise<GymRecord[]>;
+  markGymAttendance(
+    phone: string,
+    date: string,
+    status: AttendanceStatus,
+    note: string,
+  ): Promise<AttendanceResult>;
+  getGymStreak(phone: string, todayDate: string): Promise<bigint>;
+
+  // Notes
+  getNotes(phone: string): Promise<Note[]>;
+  addNote(
+    phone: string,
+    subject: string,
+    title: string,
+    content: string,
+    colorTag: string,
+    isPinned: boolean,
+  ): Promise<NoteResult>;
+  updateNote(
+    phone: string,
+    id: string,
+    subject: string,
+    title: string,
+    content: string,
+    colorTag: string,
+    isPinned: boolean,
+  ): Promise<NoteResult>;
+  deleteNote(phone: string, id: string): Promise<boolean>;
+  toggleNotePin(phone: string, id: string): Promise<NoteResult>;
+
+  // PDFs
+  getPdfs(phone: string): Promise<Pdf[]>;
+  uploadPdf(
+    phone: string,
+    subject: string,
+    filename: string,
+    fileData: Uint8Array,
+    contentType: string,
+  ): Promise<PdfResult>;
+  getPdfFile(id: string): Promise<Uint8Array | null>;
+  deletePdf(phone: string, id: string): Promise<boolean>;
 }

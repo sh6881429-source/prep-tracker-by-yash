@@ -36,11 +36,53 @@ type RegisterResult =
    ok: UserProfile;
    phoneAlreadyTaken;
  };
+type PdfResult = 
+ variant {
+   notFound;
+   ok: Pdf;
+   unauthorized;
+ };
+type Pdf = 
+ record {
+   contentType: text;
+   createdAt: int;
+   fileData: vec nat8;
+   filename: text;
+   id: text;
+   phone: text;
+   subject: text;
+ };
+type NoteResult = 
+ variant {
+   notFound;
+   ok: Note;
+   unauthorized;
+ };
+type Note = 
+ record {
+   colorTag: text;
+   content: text;
+   createdAt: int;
+   id: text;
+   isPinned: bool;
+   phone: text;
+   subject: text;
+   title: text;
+   updatedAt: int;
+ };
 type LoginResult = 
  variant {
    ok: UserProfile;
    userNotFound;
    wrongPin;
+ };
+type GymAttendance = 
+ record {
+   date: text;
+   id: text;
+   note: text;
+   phone: text;
+   status: AttendanceStatus;
  };
 type DeleteResult = 
  variant {
@@ -57,6 +99,17 @@ type Chapter =
    subjectId: nat;
    subjectName: text;
  };
+type AttendanceStatus = 
+ variant {
+   absent;
+   present;
+   rest;
+ };
+type AttendanceResult = 
+ variant {
+   ok: GymAttendance;
+   unauthorized;
+ };
 type AdminUserDetail = 
  record {
    createdAt: int;
@@ -72,6 +125,8 @@ service : {
       err: text;
       ok: Chapter;
     });
+  addNote: (phone: text, subject: text, title: text, content: text, colorTag:
+   text, isPinned: bool) -> (NoteResult);
   addSubject: (phone: text, name: text) -> (variant {
                                               err: text;
                                               ok: Subject;
@@ -81,6 +136,8 @@ service : {
                                                      err: text;
                                                      ok;
                                                    });
+  deleteNote: (phone: text, id: text) -> (bool);
+  deletePdf: (phone: text, id: text) -> (bool);
   deleteStudySession: (phone: text, sessionId: nat) -> (bool);
   deleteSubject: (phone: text, subjectId: nat) -> (variant {
                                                      err: text;
@@ -89,8 +146,14 @@ service : {
   deleteUser: (phone: text) -> (DeleteResult);
   getAllUserDetails: () -> (vec AdminUserDetail) query;
   getAllUserProfiles: () -> (vec UserProfile) query;
+  getAppLogo: () -> (opt text) query;
   getCallerUserRole: () -> (UserRole) query;
   getChapters: (phone: text, subjectId: nat) -> (vec Chapter);
+  getGymAttendance: (phone: text) -> (vec GymAttendance);
+  getGymStreak: (phone: text, todayDate: text) -> (nat);
+  getNotes: (phone: text) -> (vec Note);
+  getPdfFile: (id: text) -> (opt vec nat8) query;
+  getPdfs: (phone: text) -> (vec Pdf);
   getPendingChapters: (phone: text) -> (vec Chapter);
   getPendingChaptersCount: (phone: text) -> (nat);
   getStudySessions: (phone: text) -> (vec StudySession) query;
@@ -98,13 +161,21 @@ service : {
   getUserProfile: (phone: text) -> (opt UserProfile) query;
   isCallerAdmin: () -> (bool) query;
   loginUser: (phone: text, pin: text) -> (LoginResult) query;
+  markGymAttendance: (phone: text, date: text, status: AttendanceStatus,
+   note: text) -> (AttendanceResult);
   registerUser: (phone: text, name: text, details: text, pin: text) ->
    (RegisterResult);
   saveStudySession: (phone: text, subject: text, durationSeconds: nat, date:
    text, startTime: int, endTime: int) -> (nat);
+  setAppLogo: (logo: text) -> ();
+  toggleNotePin: (phone: text, id: text) -> (NoteResult);
   updateChapterStatus: (phone: text, chapterId: nat, status: text) ->
    (variant {
       err: text;
       ok;
     });
+  updateNote: (phone: text, id: text, subject: text, title: text, content:
+   text, colorTag: text, isPinned: bool) -> (NoteResult);
+  uploadPdf: (phone: text, subject: text, filename: text, fileData: vec nat8,
+   contentType: text) -> (PdfResult);
 }

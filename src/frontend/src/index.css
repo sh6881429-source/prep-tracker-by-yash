@@ -22,96 +22,96 @@
   :root {
     --radius: 0.75rem;
 
-    /* Background: clean off-white */
-    --background: 0.97 0.005 240;
-    --foreground: 0.16 0.025 255;
+    /* Background: light gray premium */
+    --background: 0.985 0.005 240;
+    --foreground: 0.18 0.08 264;
 
     /* Cards: pure white */
     --card: 1 0 0;
-    --card-foreground: 0.16 0.025 255;
+    --card-foreground: 0.18 0.08 264;
 
     /* Popovers */
     --popover: 1 0 0;
-    --popover-foreground: 0.16 0.025 255;
+    --popover-foreground: 0.18 0.08 264;
 
-    /* Primary: deep navy */
-    --primary: 0.22 0.065 264;
-    --primary-foreground: 0.985 0 0;
+    /* Primary: deep navy premium */
+    --primary: 0.18 0.08 264;
+    --primary-foreground: 0.985 0.005 240;
 
-    /* Secondary: light blue-gray */
-    --secondary: 0.93 0.015 240;
-    --secondary-foreground: 0.22 0.065 264;
+    /* Secondary: royal blue */
+    --secondary: 0.48 0.22 264;
+    --secondary-foreground: 0.985 0.005 240;
 
     /* Muted */
     --muted: 0.93 0.01 240;
     --muted-foreground: 0.5 0.02 250;
 
-    /* Accent: vivid indigo-blue */
-    --accent: 0.55 0.22 264;
-    --accent-foreground: 0.985 0 0;
+    /* Accent: cyan */
+    --accent: 0.68 0.18 195;
+    --accent-foreground: 0.18 0.08 264;
 
     /* Destructive */
     --destructive: 0.577 0.245 27.325;
     --destructive-foreground: 0.985 0 0;
 
     /* Borders & inputs */
-    --border: 0.88 0.015 240;
-    --input: 0.88 0.015 240;
-    --ring: 0.55 0.22 264;
+    --border: 0.93 0.01 240;
+    --input: 0.93 0.01 240;
+    --ring: 0.68 0.18 195;
 
     /* Charts */
-    --chart-1: 0.55 0.22 264;
-    --chart-2: 0.6 0.18 190;
-    --chart-3: 0.7 0.15 140;
+    --chart-1: 0.48 0.22 264;
+    --chart-2: 0.68 0.18 195;
+    --chart-3: 0.6 0.18 190;
     --chart-4: 0.65 0.2 30;
-    --chart-5: 0.6 0.22 320;
+    --chart-5: 0.55 0.22 320;
 
     /* Sidebar */
-    --sidebar: 0.22 0.065 264;
-    --sidebar-foreground: 0.985 0 0;
-    --sidebar-primary: 0.55 0.22 264;
-    --sidebar-primary-foreground: 0.985 0 0;
-    --sidebar-accent: 0.3 0.07 264;
-    --sidebar-accent-foreground: 0.985 0 0;
-    --sidebar-border: 0.3 0.05 264;
-    --sidebar-ring: 0.55 0.22 264;
+    --sidebar: 0.18 0.08 264;
+    --sidebar-foreground: 0.985 0.005 240;
+    --sidebar-primary: 0.48 0.22 264;
+    --sidebar-primary-foreground: 0.985 0.005 240;
+    --sidebar-accent: 0.68 0.18 195;
+    --sidebar-accent-foreground: 0.18 0.08 264;
+    --sidebar-border: 0.25 0.06 264;
+    --sidebar-ring: 0.68 0.18 195;
 
     /* Custom tokens */
-    --navy: 0.22 0.065 264;
-    --navy-light: 0.3 0.07 264;
-    --indigo: 0.55 0.22 264;
-    --indigo-light: 0.68 0.18 264;
-    --teal: 0.62 0.16 195;
+    --navy: 0.18 0.08 264;
+    --navy-light: 0.25 0.06 264;
+    --royal-blue: 0.48 0.22 264;
+    --cyan: 0.68 0.18 195;
+    --teal: 0.68 0.18 195;
   }
 
   .dark {
-    --background: 0.14 0.02 264;
-    --foreground: 0.95 0.01 240;
-    --card: 0.19 0.03 264;
-    --card-foreground: 0.95 0.01 240;
-    --popover: 0.22 0.04 264;
-    --popover-foreground: 0.95 0.01 240;
-    --primary: 0.68 0.18 264;
-    --primary-foreground: 0.14 0.02 264;
-    --secondary: 0.22 0.04 264;
-    --secondary-foreground: 0.95 0.01 240;
+    --background: 0.12 0.02 264;
+    --foreground: 0.96 0.01 240;
+    --card: 0.17 0.03 264;
+    --card-foreground: 0.96 0.01 240;
+    --popover: 0.2 0.04 264;
+    --popover-foreground: 0.96 0.01 240;
+    --primary: 0.48 0.22 264;
+    --primary-foreground: 0.96 0.01 240;
+    --secondary: 0.25 0.06 264;
+    --secondary-foreground: 0.96 0.01 240;
     --muted: 0.22 0.04 264;
     --muted-foreground: 0.6 0.02 250;
-    --accent: 0.65 0.2 264;
-    --accent-foreground: 0.14 0.02 264;
+    --accent: 0.72 0.18 195;
+    --accent-foreground: 0.96 0.01 240;
     --destructive: 0.704 0.191 22.216;
     --destructive-foreground: 0.985 0 0;
     --border: 1 0 0 / 10%;
     --input: 1 0 0 / 15%;
-    --ring: 0.65 0.2 264;
-    --sidebar: 0.16 0.03 264;
-    --sidebar-foreground: 0.95 0.01 240;
-    --sidebar-primary: 0.65 0.2 264;
-    --sidebar-primary-foreground: 0.985 0 0;
-    --sidebar-accent: 0.22 0.04 264;
-    --sidebar-accent-foreground: 0.95 0.01 240;
+    --ring: 0.72 0.18 195;
+    --sidebar: 0.14 0.025 264;
+    --sidebar-foreground: 0.96 0.01 240;
+    --sidebar-primary: 0.68 0.18 195;
+    --sidebar-primary-foreground: 0.96 0.01 240;
+    --sidebar-accent: 0.72 0.18 195;
+    --sidebar-accent-foreground: 0.14 0.025 264;
     --sidebar-border: 1 0 0 / 10%;
-    --sidebar-ring: 0.65 0.2 264;
+    --sidebar-ring: 0.72 0.18 195;
   }
 
   * {
@@ -142,28 +142,133 @@
   .gradient-hero {
     background: linear-gradient(
       135deg,
-      oklch(0.22 0.065 264) 0%,
-      oklch(0.3 0.1 270) 50%,
-      oklch(0.22 0.08 250) 100%
+      oklch(0.18 0.08 264) 0%,
+      oklch(0.25 0.06 264) 50%,
+      oklch(0.18 0.08 264) 100%
     );
   }
 
   .gradient-card {
     background: linear-gradient(
       135deg,
-      oklch(0.55 0.22 264 / 0.12) 0%,
-      oklch(0.62 0.16 195 / 0.08) 100%
+      oklch(0.48 0.22 264 / 0.08) 0%,
+      oklch(0.68 0.18 195 / 0.06) 100%
     );
   }
 
   .text-gradient {
     background: linear-gradient(
       135deg,
-      oklch(0.75 0.18 264) 0%,
-      oklch(0.72 0.15 195) 100%
+      oklch(0.48 0.22 264) 0%,
+      oklch(0.68 0.18 195) 100%
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  /* Hide scrollbar for filter bars */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Quill rich text editor theming */
+  .notes-editor .ql-toolbar {
+    border: none !important;
+    border-bottom: 1px solid oklch(var(--border)) !important;
+    background: oklch(var(--muted));
+    border-radius: 0;
+    font-family: var(--font-body);
+  }
+  .notes-editor .ql-container {
+    border: none !important;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    min-height: 140px;
+  }
+  .notes-editor .ql-editor {
+    min-height: 140px;
+    color: oklch(var(--foreground));
+    padding: 12px;
+  }
+  .notes-editor .ql-editor.ql-blank::before {
+    color: oklch(var(--muted-foreground));
+    font-style: normal;
+  }
+  .notes-editor .ql-toolbar .ql-stroke {
+    stroke: oklch(var(--muted-foreground));
+  }
+  .notes-editor .ql-toolbar .ql-fill {
+    fill: oklch(var(--muted-foreground));
+  }
+  .notes-editor .ql-toolbar button:hover .ql-stroke,
+  .notes-editor .ql-toolbar button.ql-active .ql-stroke {
+    stroke: oklch(var(--primary));
+  }
+  .notes-editor .ql-toolbar button:hover .ql-fill,
+  .notes-editor .ql-toolbar button.ql-active .ql-fill {
+    fill: oklch(var(--primary));
+  }
+
+  /* Premium navy Quill toolbar */
+  .notes-editor-premium .ql-toolbar {
+    border: none !important;
+    border-bottom: 1px solid oklch(0.25 0.06 264) !important;
+    background: oklch(0.18 0.08 264);
+    border-radius: 0;
+    font-family: var(--font-body);
+    padding: 8px 12px;
+  }
+  .notes-editor-premium .ql-container {
+    border: none !important;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    min-height: 160px;
+  }
+  .notes-editor-premium .ql-editor {
+    min-height: 160px;
+    color: oklch(var(--foreground));
+    padding: 14px;
+    background: oklch(var(--card));
+  }
+  .notes-editor-premium .ql-editor.ql-blank::before {
+    color: oklch(var(--muted-foreground));
+    font-style: normal;
+  }
+  .notes-editor-premium .ql-toolbar .ql-stroke {
+    stroke: oklch(0.75 0.01 240);
+  }
+  .notes-editor-premium .ql-toolbar .ql-fill {
+    fill: oklch(0.75 0.01 240);
+  }
+  .notes-editor-premium .ql-toolbar .ql-picker-label {
+    color: oklch(0.75 0.01 240);
+  }
+  .notes-editor-premium .ql-toolbar .ql-picker-label .ql-stroke {
+    stroke: oklch(0.75 0.01 240);
+  }
+  .notes-editor-premium .ql-toolbar button:hover .ql-stroke,
+  .notes-editor-premium .ql-toolbar button.ql-active .ql-stroke {
+    stroke: oklch(0.68 0.18 195);
+  }
+  .notes-editor-premium .ql-toolbar button:hover .ql-fill,
+  .notes-editor-premium .ql-toolbar button.ql-active .ql-fill {
+    fill: oklch(0.68 0.18 195);
+  }
+  .notes-editor-premium .ql-toolbar .ql-picker-options {
+    background: oklch(var(--card));
+    border: 1px solid oklch(var(--border));
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 16px oklch(0 0 0 / 12%);
+  }
+  .notes-editor-premium .ql-toolbar .ql-picker-item {
+    color: oklch(var(--foreground));
+  }
+  .notes-editor-premium .ql-toolbar .ql-picker-item:hover {
+    color: oklch(var(--secondary));
   }
 }

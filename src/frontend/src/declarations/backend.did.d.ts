@@ -17,6 +17,11 @@ export interface AdminUserDetail {
   'details' : string,
   'phone' : string,
 }
+export type AttendanceResult = { 'ok' : GymAttendance } |
+  { 'unauthorized' : null };
+export type AttendanceStatus = { 'present' : null } |
+  { 'rest' : null } |
+  { 'absent' : null };
 export interface Chapter {
   'id' : bigint,
   'status' : string,
@@ -28,9 +33,42 @@ export interface Chapter {
 }
 export type DeleteResult = { 'ok' : null } |
   { 'userNotFound' : null };
+export interface GymAttendance {
+  'id' : string,
+  'status' : AttendanceStatus,
+  'date' : string,
+  'note' : string,
+  'phone' : string,
+}
 export type LoginResult = { 'ok' : UserProfile } |
   { 'wrongPin' : null } |
   { 'userNotFound' : null };
+export interface Note {
+  'id' : string,
+  'title' : string,
+  'content' : string,
+  'subject' : string,
+  'createdAt' : bigint,
+  'updatedAt' : bigint,
+  'colorTag' : string,
+  'phone' : string,
+  'isPinned' : boolean,
+}
+export type NoteResult = { 'ok' : Note } |
+  { 'notFound' : null } |
+  { 'unauthorized' : null };
+export interface Pdf {
+  'id' : string,
+  'subject' : string,
+  'contentType' : string,
+  'createdAt' : bigint,
+  'fileData' : Uint8Array,
+  'filename' : string,
+  'phone' : string,
+}
+export type PdfResult = { 'ok' : Pdf } |
+  { 'notFound' : null } |
+  { 'unauthorized' : null };
 export type RegisterResult = { 'ok' : UserProfile } |
   { 'invalidPhone' : null } |
   { 'invalidPin' : null } |
@@ -67,6 +105,10 @@ export interface _SERVICE {
     { 'ok' : Chapter } |
       { 'err' : string }
   >,
+  'addNote' : ActorMethod<
+    [string, string, string, string, string, boolean],
+    NoteResult
+  >,
   'addSubject' : ActorMethod<
     [string, string],
     { 'ok' : Subject } |
@@ -78,6 +120,8 @@ export interface _SERVICE {
     { 'ok' : null } |
       { 'err' : string }
   >,
+  'deleteNote' : ActorMethod<[string, string], boolean>,
+  'deletePdf' : ActorMethod<[string, string], boolean>,
   'deleteStudySession' : ActorMethod<[string, bigint], boolean>,
   'deleteSubject' : ActorMethod<
     [string, bigint],
@@ -87,8 +131,14 @@ export interface _SERVICE {
   'deleteUser' : ActorMethod<[string], DeleteResult>,
   'getAllUserDetails' : ActorMethod<[], Array<AdminUserDetail>>,
   'getAllUserProfiles' : ActorMethod<[], Array<UserProfile>>,
+  'getAppLogo' : ActorMethod<[], [] | [string]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getChapters' : ActorMethod<[string, bigint], Array<Chapter>>,
+  'getGymAttendance' : ActorMethod<[string], Array<GymAttendance>>,
+  'getGymStreak' : ActorMethod<[string, string], bigint>,
+  'getNotes' : ActorMethod<[string], Array<Note>>,
+  'getPdfFile' : ActorMethod<[string], [] | [Uint8Array]>,
+  'getPdfs' : ActorMethod<[string], Array<Pdf>>,
   'getPendingChapters' : ActorMethod<[string], Array<Chapter>>,
   'getPendingChaptersCount' : ActorMethod<[string], bigint>,
   'getStudySessions' : ActorMethod<[string], Array<StudySession>>,
@@ -96,6 +146,10 @@ export interface _SERVICE {
   'getUserProfile' : ActorMethod<[string], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'loginUser' : ActorMethod<[string, string], LoginResult>,
+  'markGymAttendance' : ActorMethod<
+    [string, string, AttendanceStatus, string],
+    AttendanceResult
+  >,
   'registerUser' : ActorMethod<
     [string, string, string, string],
     RegisterResult
@@ -104,10 +158,20 @@ export interface _SERVICE {
     [string, string, bigint, string, bigint, bigint],
     bigint
   >,
+  'setAppLogo' : ActorMethod<[string], undefined>,
+  'toggleNotePin' : ActorMethod<[string, string], NoteResult>,
   'updateChapterStatus' : ActorMethod<
     [string, bigint, string],
     { 'ok' : null } |
       { 'err' : string }
+  >,
+  'updateNote' : ActorMethod<
+    [string, string, string, string, string, string, boolean],
+    NoteResult
+  >,
+  'uploadPdf' : ActorMethod<
+    [string, string, string, Uint8Array, string],
+    PdfResult
   >,
 }
 export declare const idlService: IDL.ServiceClass;

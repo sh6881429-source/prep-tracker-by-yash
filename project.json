@@ -1,21 +1,28 @@
 {
-  "overview": "Prep Tracker by Yash is a mobile-friendly study and gym tracking app for students. It features an admin dashboard, user authentication, a study timer with session history, and a syllabus tracker for managing subjects, chapters, and completion status.",
+  "overview": "Prep Tracker by Yash is a premium study and gym tracking app with admin and user roles. Features include a Study Timer, Syllabus Tracker with revision tracking, rich-text Notes with PDF support, and a Gym Attendance Tracker — all wrapped in a modern, responsive design that adapts between mobile and desktop.",
   "features": [
-    "Role-based login (Admin and User)",
-    "Admin dashboard with user management",
-    "Study Timer with session history and weekly stats",
-    "Syllabus Tracker with subjects, chapters, and pending/completed status",
-    "Pending chapters count on home dashboard",
-    "Persistent sessions across refreshes"
+    "Role-based login (Admin & User)",
+    "Study Timer with circular progress and session history",
+    "Syllabus Tracker with revision targets and progress",
+    "Rich-text Notes with color tags and pinning",
+    "PDF upload and in-app viewer",
+    "Gym Attendance Calendar with streak tracking",
+    "Admin Dashboard with user management",
+    "Admin password change and logo customization",
+    "Responsive layout: sidebar on desktop, bottom nav on mobile",
+    "Premium Navy/Royal Blue/Cyan design theme with smooth animations"
   ],
   "category": "productivity",
   "tags": [
     "study",
+    "gym",
     "tracker",
-    "syllabus",
-    "education",
     "productivity",
-    "mobile-friendly"
+    "notes",
+    "attendance",
+    "syllabus",
+    "admin",
+    "premium"
   ],
-  "last_updated": "2026-04-08T05:22:27.133Z"
+  "last_updated": "2026-04-09T11:31:11.492Z"
 }

@@ -1,4 +1,5 @@
 // Version: 1.0.0
+type AttendanceStatus__868379508 = {#absent; #present; #rest};
 type Chapter__993775566 =
   {
     createdAt : Int;
@@ -11,6 +12,14 @@ type Chapter__993775566 =
   };
 type Data__791452850<K, V> =
   {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type GymAttendance__502394855 =
+  {
+    date : Text;
+    id : Text;
+    note : Text;
+    phone : Text;
+    status : AttendanceStatus__868379508
+  };
 type Internal__8484328<K, V> =
   {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
 type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
@@ -37,6 +46,28 @@ type Nat__490723111 = Nat__920180692;
 type Nat__920180692 = Nat;
 type Node__46230540<K, V> =
   {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type Note__1063160515 =
+  {
+    colorTag : Text;
+    content : Text;
+    createdAt : Int;
+    id : Text;
+    isPinned : Bool;
+    phone : Text;
+    subject : Text;
+    title : Text;
+    updatedAt : Int
+  };
+type Pdf__25786097 =
+  {
+    contentType : Text;
+    createdAt : Int;
+    fileData : [Nat8];
+    filename : Text;
+    id : Text;
+    phone : Text;
+    subject : Text
+  };
 type StudySession__500027106 =
   {
     date : Text;
@@ -59,14 +90,31 @@ actor {
       var adminAssigned : Bool;
       userRoles : Map__605269027<Principal, UserRole__1054455867>
     };
+  stable var appLogo : ?Text;
   stable chapterStore :
     {
       var root : Node__46230540<Text, List__415060402<Chapter__993775566>>;
       var size : Nat__490723111
     };
+  stable gymStore :
+    {
+      var root :
+        Node__46230540<Text, List__415060402<GymAttendance__502394855>>;
+      var size : Nat__490723111
+    };
   stable nextChapterId : [var Nat];
   stable var nextSessionId : Nat;
   stable nextSubjectId : [var Nat];
+  stable noteStore :
+    {
+      var root : Node__46230540<Text, List__415060402<Note__1063160515>>;
+      var size : Nat__490723111
+    };
+  stable pdfStore :
+    {
+      var root : Node__46230540<Text, List__415060402<Pdf__25786097>>;
+      var size : Nat__490723111
+    };
   stable phoneToPrincipal :
     {var root : Node__46230540<Text, Principal>; var size : Nat__490723111};
   stable studySessionStore :

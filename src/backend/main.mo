@@ -13,6 +13,13 @@ import AccessControl "mo:caffeineai-authorization/access-control";
 import SyllabusTypes "types/syllabus";
 import SyllabusApi "mixins/syllabus-api";
 
+import NotesTypes "types/notes";
+import NotesApi "mixins/notes-api";
+
+import GymTypes "types/gym";
+import GymApi "mixins/gym-api";
+
+
 
 
 actor {
@@ -118,7 +125,7 @@ actor {
     };
   };
 
-  stable var nextSessionId = 1;
+  var nextSessionId = 1;
   let studySessionStore = Map.empty<Text, List.List<StudySession>>();
 
   // Syllabus stores
@@ -127,6 +134,18 @@ actor {
   let nextSubjectId = [var 1];
   let nextChapterId = [var 1];
   include SyllabusApi(subjectStore, chapterStore, nextSubjectId, nextChapterId, phoneToPrincipal);
+
+  // Notes & PDF stores
+  let noteStore = Map.empty<Text, List.List<NotesTypes.Note>>();
+  let pdfStore = Map.empty<Text, List.List<NotesTypes.Pdf>>();
+  include NotesApi(noteStore, pdfStore, phoneToPrincipal);
+
+  // Gym attendance store
+  let gymStore = Map.empty<Text, List.List<GymTypes.GymAttendance>>();
+  include GymApi(gymStore, phoneToPrincipal);
+
+  // App logo (base64 data URL), stored server-side so all devices see the same logo
+  var appLogo : ?Text = null;
 
   // Drop the legacy data after upgrade
   system func postupgrade() {
@@ -205,10 +224,10 @@ actor {
     switch (userStore.get(phone)) {
       case (null) { return #userNotFound };
       case (?_) {
-        ignore userStore.remove(phone);
-        ignore phoneToPrincipal.remove(phone);
+        userStore.remove(phone);
+        phoneToPrincipal.remove(phone);
         // Also remove all study sessions for this user
-        ignore studySessionStore.remove(phone);
+        studySessionStore.remove(phone);
         return #ok;
       };
     };
@@ -258,6 +277,18 @@ actor {
     userSessions.toArray().sort(
       compareSessionsByStartTimeDesc
     );
+  };
+
+  // App logo API
+  public query func getAppLogo() : async ?Text {
+    appLogo;
+  };
+
+  public shared ({ caller }) func setAppLogo(logo : Text) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can update the app logo");
+    };
+    appLogo := ?logo;
   };
 
   public shared ({ caller }) func deleteStudySession(phone : Text, sessionId : Nat) : async Bool {

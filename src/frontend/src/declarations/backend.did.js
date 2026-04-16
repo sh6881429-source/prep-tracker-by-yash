@@ -17,6 +17,22 @@ export const Chapter = IDL.Record({
   'subjectId' : IDL.Nat,
   'phone' : IDL.Text,
 });
+export const Note = IDL.Record({
+  'id' : IDL.Text,
+  'title' : IDL.Text,
+  'content' : IDL.Text,
+  'subject' : IDL.Text,
+  'createdAt' : IDL.Int,
+  'updatedAt' : IDL.Int,
+  'colorTag' : IDL.Text,
+  'phone' : IDL.Text,
+  'isPinned' : IDL.Bool,
+});
+export const NoteResult = IDL.Variant({
+  'ok' : Note,
+  'notFound' : IDL.Null,
+  'unauthorized' : IDL.Null,
+});
 export const Subject = IDL.Record({
   'id' : IDL.Nat,
   'name' : IDL.Text,
@@ -46,6 +62,27 @@ export const UserProfile = IDL.Record({
   'details' : IDL.Text,
   'phone' : IDL.Text,
 });
+export const AttendanceStatus = IDL.Variant({
+  'present' : IDL.Null,
+  'rest' : IDL.Null,
+  'absent' : IDL.Null,
+});
+export const GymAttendance = IDL.Record({
+  'id' : IDL.Text,
+  'status' : AttendanceStatus,
+  'date' : IDL.Text,
+  'note' : IDL.Text,
+  'phone' : IDL.Text,
+});
+export const Pdf = IDL.Record({
+  'id' : IDL.Text,
+  'subject' : IDL.Text,
+  'contentType' : IDL.Text,
+  'createdAt' : IDL.Int,
+  'fileData' : IDL.Vec(IDL.Nat8),
+  'filename' : IDL.Text,
+  'phone' : IDL.Text,
+});
 export const StudySession = IDL.Record({
   'id' : IDL.Nat,
   'startTime' : IDL.Int,
@@ -60,11 +97,20 @@ export const LoginResult = IDL.Variant({
   'wrongPin' : IDL.Null,
   'userNotFound' : IDL.Null,
 });
+export const AttendanceResult = IDL.Variant({
+  'ok' : GymAttendance,
+  'unauthorized' : IDL.Null,
+});
 export const RegisterResult = IDL.Variant({
   'ok' : UserProfile,
   'invalidPhone' : IDL.Null,
   'invalidPin' : IDL.Null,
   'phoneAlreadyTaken' : IDL.Null,
+});
+export const PdfResult = IDL.Variant({
+  'ok' : Pdf,
+  'notFound' : IDL.Null,
+  'unauthorized' : IDL.Null,
 });
 
 export const idlService = IDL.Service({
@@ -72,6 +118,11 @@ export const idlService = IDL.Service({
   'addChapter' : IDL.Func(
       [IDL.Text, IDL.Nat, IDL.Text],
       [IDL.Variant({ 'ok' : Chapter, 'err' : IDL.Text })],
+      [],
+    ),
+  'addNote' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Bool],
+      [NoteResult],
       [],
     ),
   'addSubject' : IDL.Func(
@@ -85,6 +136,8 @@ export const idlService = IDL.Service({
       [IDL.Variant({ 'ok' : IDL.Null, 'err' : IDL.Text })],
       [],
     ),
+  'deleteNote' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
+  'deletePdf' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
   'deleteStudySession' : IDL.Func([IDL.Text, IDL.Nat], [IDL.Bool], []),
   'deleteSubject' : IDL.Func(
       [IDL.Text, IDL.Nat],
@@ -94,8 +147,14 @@ export const idlService = IDL.Service({
   'deleteUser' : IDL.Func([IDL.Text], [DeleteResult], []),
   'getAllUserDetails' : IDL.Func([], [IDL.Vec(AdminUserDetail)], ['query']),
   'getAllUserProfiles' : IDL.Func([], [IDL.Vec(UserProfile)], ['query']),
+  'getAppLogo' : IDL.Func([], [IDL.Opt(IDL.Text)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getChapters' : IDL.Func([IDL.Text, IDL.Nat], [IDL.Vec(Chapter)], []),
+  'getGymAttendance' : IDL.Func([IDL.Text], [IDL.Vec(GymAttendance)], []),
+  'getGymStreak' : IDL.Func([IDL.Text, IDL.Text], [IDL.Nat], []),
+  'getNotes' : IDL.Func([IDL.Text], [IDL.Vec(Note)], []),
+  'getPdfFile' : IDL.Func([IDL.Text], [IDL.Opt(IDL.Vec(IDL.Nat8))], ['query']),
+  'getPdfs' : IDL.Func([IDL.Text], [IDL.Vec(Pdf)], []),
   'getPendingChapters' : IDL.Func([IDL.Text], [IDL.Vec(Chapter)], []),
   'getPendingChaptersCount' : IDL.Func([IDL.Text], [IDL.Nat], []),
   'getStudySessions' : IDL.Func([IDL.Text], [IDL.Vec(StudySession)], ['query']),
@@ -103,6 +162,11 @@ export const idlService = IDL.Service({
   'getUserProfile' : IDL.Func([IDL.Text], [IDL.Opt(UserProfile)], ['query']),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'loginUser' : IDL.Func([IDL.Text, IDL.Text], [LoginResult], ['query']),
+  'markGymAttendance' : IDL.Func(
+      [IDL.Text, IDL.Text, AttendanceStatus, IDL.Text],
+      [AttendanceResult],
+      [],
+    ),
   'registerUser' : IDL.Func(
       [IDL.Text, IDL.Text, IDL.Text, IDL.Text],
       [RegisterResult],
@@ -113,9 +177,21 @@ export const idlService = IDL.Service({
       [IDL.Nat],
       [],
     ),
+  'setAppLogo' : IDL.Func([IDL.Text], [], []),
+  'toggleNotePin' : IDL.Func([IDL.Text, IDL.Text], [NoteResult], []),
   'updateChapterStatus' : IDL.Func(
       [IDL.Text, IDL.Nat, IDL.Text],
       [IDL.Variant({ 'ok' : IDL.Null, 'err' : IDL.Text })],
+      [],
+    ),
+  'updateNote' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Bool],
+      [NoteResult],
+      [],
+    ),
+  'uploadPdf' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Vec(IDL.Nat8), IDL.Text],
+      [PdfResult],
       [],
     ),
 });
@@ -131,6 +207,22 @@ export const idlFactory = ({ IDL }) => {
     'createdAt' : IDL.Int,
     'subjectId' : IDL.Nat,
     'phone' : IDL.Text,
+  });
+  const Note = IDL.Record({
+    'id' : IDL.Text,
+    'title' : IDL.Text,
+    'content' : IDL.Text,
+    'subject' : IDL.Text,
+    'createdAt' : IDL.Int,
+    'updatedAt' : IDL.Int,
+    'colorTag' : IDL.Text,
+    'phone' : IDL.Text,
+    'isPinned' : IDL.Bool,
+  });
+  const NoteResult = IDL.Variant({
+    'ok' : Note,
+    'notFound' : IDL.Null,
+    'unauthorized' : IDL.Null,
   });
   const Subject = IDL.Record({
     'id' : IDL.Nat,
@@ -161,6 +253,27 @@ export const idlFactory = ({ IDL }) => {
     'details' : IDL.Text,
     'phone' : IDL.Text,
   });
+  const AttendanceStatus = IDL.Variant({
+    'present' : IDL.Null,
+    'rest' : IDL.Null,
+    'absent' : IDL.Null,
+  });
+  const GymAttendance = IDL.Record({
+    'id' : IDL.Text,
+    'status' : AttendanceStatus,
+    'date' : IDL.Text,
+    'note' : IDL.Text,
+    'phone' : IDL.Text,
+  });
+  const Pdf = IDL.Record({
+    'id' : IDL.Text,
+    'subject' : IDL.Text,
+    'contentType' : IDL.Text,
+    'createdAt' : IDL.Int,
+    'fileData' : IDL.Vec(IDL.Nat8),
+    'filename' : IDL.Text,
+    'phone' : IDL.Text,
+  });
   const StudySession = IDL.Record({
     'id' : IDL.Nat,
     'startTime' : IDL.Int,
@@ -175,11 +288,20 @@ export const idlFactory = ({ IDL }) => {
     'wrongPin' : IDL.Null,
     'userNotFound' : IDL.Null,
   });
+  const AttendanceResult = IDL.Variant({
+    'ok' : GymAttendance,
+    'unauthorized' : IDL.Null,
+  });
   const RegisterResult = IDL.Variant({
     'ok' : UserProfile,
     'invalidPhone' : IDL.Null,
     'invalidPin' : IDL.Null,
     'phoneAlreadyTaken' : IDL.Null,
+  });
+  const PdfResult = IDL.Variant({
+    'ok' : Pdf,
+    'notFound' : IDL.Null,
+    'unauthorized' : IDL.Null,
   });
   
   return IDL.Service({
@@ -187,6 +309,11 @@ export const idlFactory = ({ IDL }) => {
     'addChapter' : IDL.Func(
         [IDL.Text, IDL.Nat, IDL.Text],
         [IDL.Variant({ 'ok' : Chapter, 'err' : IDL.Text })],
+        [],
+      ),
+    'addNote' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Bool],
+        [NoteResult],
         [],
       ),
     'addSubject' : IDL.Func(
@@ -200,6 +327,8 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Variant({ 'ok' : IDL.Null, 'err' : IDL.Text })],
         [],
       ),
+    'deleteNote' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
+    'deletePdf' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
     'deleteStudySession' : IDL.Func([IDL.Text, IDL.Nat], [IDL.Bool], []),
     'deleteSubject' : IDL.Func(
         [IDL.Text, IDL.Nat],
@@ -209,8 +338,18 @@ export const idlFactory = ({ IDL }) => {
     'deleteUser' : IDL.Func([IDL.Text], [DeleteResult], []),
     'getAllUserDetails' : IDL.Func([], [IDL.Vec(AdminUserDetail)], ['query']),
     'getAllUserProfiles' : IDL.Func([], [IDL.Vec(UserProfile)], ['query']),
+    'getAppLogo' : IDL.Func([], [IDL.Opt(IDL.Text)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getChapters' : IDL.Func([IDL.Text, IDL.Nat], [IDL.Vec(Chapter)], []),
+    'getGymAttendance' : IDL.Func([IDL.Text], [IDL.Vec(GymAttendance)], []),
+    'getGymStreak' : IDL.Func([IDL.Text, IDL.Text], [IDL.Nat], []),
+    'getNotes' : IDL.Func([IDL.Text], [IDL.Vec(Note)], []),
+    'getPdfFile' : IDL.Func(
+        [IDL.Text],
+        [IDL.Opt(IDL.Vec(IDL.Nat8))],
+        ['query'],
+      ),
+    'getPdfs' : IDL.Func([IDL.Text], [IDL.Vec(Pdf)], []),
     'getPendingChapters' : IDL.Func([IDL.Text], [IDL.Vec(Chapter)], []),
     'getPendingChaptersCount' : IDL.Func([IDL.Text], [IDL.Nat], []),
     'getStudySessions' : IDL.Func(
@@ -222,6 +361,11 @@ export const idlFactory = ({ IDL }) => {
     'getUserProfile' : IDL.Func([IDL.Text], [IDL.Opt(UserProfile)], ['query']),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'loginUser' : IDL.Func([IDL.Text, IDL.Text], [LoginResult], ['query']),
+    'markGymAttendance' : IDL.Func(
+        [IDL.Text, IDL.Text, AttendanceStatus, IDL.Text],
+        [AttendanceResult],
+        [],
+      ),
     'registerUser' : IDL.Func(
         [IDL.Text, IDL.Text, IDL.Text, IDL.Text],
         [RegisterResult],
@@ -232,9 +376,21 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Nat],
         [],
       ),
+    'setAppLogo' : IDL.Func([IDL.Text], [], []),
+    'toggleNotePin' : IDL.Func([IDL.Text, IDL.Text], [NoteResult], []),
     'updateChapterStatus' : IDL.Func(
         [IDL.Text, IDL.Nat, IDL.Text],
         [IDL.Variant({ 'ok' : IDL.Null, 'err' : IDL.Text })],
+        [],
+      ),
+    'updateNote' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Bool],
+        [NoteResult],
+        [],
+      ),
+    'uploadPdf' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Vec(IDL.Nat8), IDL.Text],
+        [PdfResult],
         [],
       ),
   });

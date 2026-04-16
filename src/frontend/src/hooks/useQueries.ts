@@ -1,14 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type {
   AdminUserDetail,
   AppBackend,
+  AttendanceStatus,
+  GymRecord,
   UserProfile,
 } from "../types/appTypes";
 import { useActor } from "./useActor";
 
 export function useCallerUserRole() {
-  // UserRole / getCallerUserRole no longer supported in the current backend.
-  // Returns null safely so existing call sites still compile.
   return useQuery<null>({
     queryKey: ["callerUserRole"],
     queryFn: async () => null,
@@ -23,7 +23,6 @@ export function useIsCallerAdmin() {
     queryFn: async () => {
       if (!actor) return false;
       const a = actor as unknown as AppBackend;
-      // Method may not exist in current backend — fail gracefully
       if (
         typeof (a as unknown as Record<string, unknown>).isCallerAdmin !==
         "function"
@@ -68,5 +67,60 @@ export function useAllUserDetails() {
       return a.getAllUserDetails();
     },
     enabled: !!actor && !isFetching,
+  });
+}
+
+// ─── Gym Hooks ─────────────────────────────────────────────────────────────
+
+export function useGymAttendance(phone: string) {
+  const { actor, isFetching } = useActor();
+  return useQuery<GymRecord[]>({
+    queryKey: ["gymAttendance", phone],
+    queryFn: async () => {
+      if (!actor || !phone) return [];
+      const a = actor as unknown as AppBackend;
+      return a.getGymAttendance(phone);
+    },
+    enabled: !!actor && !isFetching && !!phone,
+  });
+}
+
+export function useGymStreak(phone: string, todayDate: string) {
+  const { actor, isFetching } = useActor();
+  return useQuery<number>({
+    queryKey: ["gymStreak", phone, todayDate],
+    queryFn: async () => {
+      if (!actor || !phone) return 0;
+      const a = actor as unknown as AppBackend;
+      const result = await a.getGymStreak(phone, todayDate);
+      return Number(result);
+    },
+    enabled: !!actor && !isFetching && !!phone,
+  });
+}
+
+export function useMarkGymAttendance(phone: string) {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      date,
+      status,
+      note,
+    }: {
+      date: string;
+      status: AttendanceStatus;
+      note: string;
+    }) => {
+      if (!actor || !phone) throw new Error("Not ready");
+      const a = actor as unknown as AppBackend;
+      return a.markGymAttendance(phone, date, status, note);
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: ["gymAttendance", phone],
+      });
+      void queryClient.invalidateQueries({ queryKey: ["gymStreak", phone] });
+    },
   });
 }
